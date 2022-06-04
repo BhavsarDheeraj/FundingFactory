@@ -7,19 +7,19 @@ contract FundContract {
     using PriceConverter for uint256;
 
     constructor(string memory _name, uint256 _minUSD) {
-        owner = msg.sender;
+        i_owner = msg.sender;
         name = _name;
-        minUSD = _minUSD * 1e18;
+        i_minUSD = _minUSD * 1e18;
     }
 
     string name;
-    uint256 minUSD;
-    address owner;
+    uint256 immutable i_minUSD;
+    address immutable i_owner;
     address[] funders;
     mapping(address => uint256) addressAmountMap;
 
     function fund() public payable {
-        require(msg.value.getConversion() >= minUSD, "Funding amount should be greater than or equal to 10 dollars");
+        require(msg.value.getConversion() >= i_minUSD, "Funding amount should be greater than or equal to 10 dollars");
         funders.push(msg.sender);
         addressAmountMap[msg.sender] += msg.value;
     }
@@ -34,7 +34,7 @@ contract FundContract {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "You are not the owner");
+        require(msg.sender == i_owner, "You are not the owner");
         _;
     }
 }
