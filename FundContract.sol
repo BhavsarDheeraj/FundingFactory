@@ -37,4 +37,12 @@ contract FundContract {
         require(msg.sender == i_owner, "You are not the owner");
         _;
     }
+    
+    fallback() external payable {
+        fund();
+    }
+    
+    receive() external payable {
+        fund();
+    }
 }
