@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "./FundContract.sol";
 
 contract FundingFactory {
-    FundContract[] public fundings;
+    FundContract[] fundings;
 
     function startRaising(string memory _fundingName, uint256 _minUSD) public returns(address) {
         require(_minUSD > 0, "Min USD value should be greater than 0"); 
@@ -23,7 +23,7 @@ contract FundingFactory {
         return false;
     }
 
-    function retrieveFundsFor(address _fundAddress) public view returns(bool, uint256) {
+    function fundRaisedForFundingWithAddress(address _fundAddress) public view returns(bool, uint256) {
         for (uint256 i = 0; i < fundings.length; i++) {
             if (address(fundings[i]) == _fundAddress) {
                 return (true, address(fundings[i]).balance);
@@ -39,5 +39,17 @@ contract FundingFactory {
                 break;
             }
         }
+    }
+
+    function fundingsCount() public view returns(uint256) {
+        return fundings.length;
+    }
+
+    function totalFundingsRaisedSoFar() public view returns(uint256) {
+        uint256 totalRaised = 0;
+        for (uint256 i = 0; i < fundings.length; i++) {
+            totalRaised += address(fundings[i]).balance;
+        }
+        return totalRaised;
     }
 }
